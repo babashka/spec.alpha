@@ -364,7 +364,6 @@
 (defn get-spec
   "Returns spec registered for keyword/symbol/var k, or nil."
   [k]
-  (prn :get-spec (->sym k))
   (get (registry) (if (keyword? k) k (->sym k))))
 
 (defmacro spec
