@@ -132,7 +132,7 @@
   (let [[_ f-ns f-n] (re-matches #"(.*)\$(.*?)(__[0-9]+)?" (.. f getClass getName))]
     ;; check for anonymous function
     (when (not= "fn" f-n)
-      (symbol (clojure.lang.Compiler/demunge f-ns) (clojure.lang.Compiler/demunge f-n)))))
+      (symbol (clojure.main/demunge f-ns) (clojure.main/demunge f-n)))))
 
 (extend-protocol Specize
   clojure.lang.Keyword
@@ -306,9 +306,8 @@
   "Returns a symbol from a symbol or var"
   [x]
   (if (var? x)
-    (let [^clojure.lang.Var v x]
-      (symbol (str (.name (.ns v)))
-              (str (.sym v))))
+    (let [^sci.lang.IVar v x]
+      (symbol (str v )))
     x))
 
 (defn- unfn [expr]
@@ -950,10 +949,10 @@
   ([form mmvar retag] (multi-spec-impl form mmvar retag nil))
   ([form mmvar retag gfn]
      (let [id (java.util.UUID/randomUUID)
-           predx #(let [^clojure.lang.MultiFn mm @mmvar]
+           predx #(let [mm @mmvar]
                     (c/and (.getMethod mm ((.dispatchFn mm) %))
                            (mm %)))
-           dval #((.dispatchFn ^clojure.lang.MultiFn @mmvar) %)
+           dval #((.dispatchFn @mmvar) %)
            tag (if (keyword? retag)
                  #(assoc %1 retag %2)
                  retag)]
@@ -1892,7 +1891,7 @@
   "Return true if inst at or after start and before end"
   [start end inst]
   (c/and (inst? inst)
-         (let [t (inst-ms inst)]
+         #_(let [t nil #_(inst-ms inst)]
            (c/and (<= (inst-ms start) t) (< t (inst-ms end))))))
 
 (defmacro inst-in
@@ -1952,7 +1951,7 @@ system property. Defaults to true."}
 (defn check-asserts?
   "Returns the value set by check-asserts."
   []
-  clojure.lang.RT/checkSpecAsserts)
+  #_clojure.lang.RT/checkSpecAsserts)
 
 (defn check-asserts
   "Enable or disable spec asserts that have been compiled
@@ -1961,7 +1960,7 @@ with '*compile-asserts*' true.  See 'assert'.
 Initially set to boolean value of clojure.spec.check-asserts
 system property. Defaults to false."
   [flag]
-  (set! (. clojure.lang.RT checkSpecAsserts) flag))
+  #_(set! (. clojure.lang.RT checkSpecAsserts) flag))
 
 (defn assert*
   "Do not call this directly, use 'assert'."

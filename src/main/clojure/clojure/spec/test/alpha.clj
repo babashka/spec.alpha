@@ -89,7 +89,7 @@ guessing the original Clojure names. Returns a map with
 For non-Clojure fns, :scope and :local-fn will be absent."
   [[cls method file line]]
   (let [clojure? (contains? '#{invoke invokeStatic} method)
-        demunge #(clojure.lang.Compiler/demunge %)
+        demunge #(clojure.main/demunge %)
         degensym #(str/replace % #"--.*" "")
         [ns-sym name-sym local] (when clojure?
                                   (->> (str/split (str cls) #"\$" 3)
@@ -115,7 +115,7 @@ failure in instrument."
                         (contains? '#{clojure.spec.test.alpha/spec-checking-fn
                                       clojure.core/apply}
                                    var-scope)))]
-    (sequence (comp (map StackTraceElement->vec)
+    (sequence (comp (map identity #_StackTraceElement->vec)
                     (map interpret-stack-trace-element)
                     (filter :var-scope)
                     (drop-while plumbing?))
