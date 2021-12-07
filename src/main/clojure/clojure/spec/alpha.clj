@@ -306,8 +306,10 @@
   "Returns a symbol from a symbol or var"
   [x]
   (if (var? x)
-    (let [^sci.lang.IVar v x]
-      (symbol (str v )))
+    (let [m (meta x)
+          n (:name m)
+          ns (:ns m)]
+      (symbol (str ns) (str n)))
     x))
 
 (defn- unfn [expr]
@@ -343,7 +345,7 @@
   (if-let [ns-sym (some-> s namespace symbol)]
     (c/or (some-> (get (ns-aliases *ns*) ns-sym) str (symbol (name s)))
           s)
-    (symbol (str (.name *ns*)) (str s))))
+    (symbol (str *ns*) (str s))))
 
 (defmacro def
   "Given a namespace-qualified keyword or resolvable symbol k, and a
@@ -362,6 +364,7 @@
 (defn get-spec
   "Returns spec registered for keyword/symbol/var k, or nil."
   [k]
+  (prn :get-spec (->sym k))
   (get (registry) (if (keyword? k) k (->sym k))))
 
 (defmacro spec
@@ -1886,6 +1889,19 @@
          (for [args (gen/sample (gen arg-spec) n)]
            [args (apply f args)])
          (throw (Exception. "No :args spec found, can't generate"))))))
+
+(defprotocol Inst
+  (inst-ms* [inst]))
+
+(extend-protocol Inst
+  java.util.Date
+  (inst-ms* [inst] (.getTime ^java.util.Date inst)))
+
+(defn inst-ms
+  "Return the number of milliseconds since January 1, 1970, 00:00:00 GMT"
+  {:added "1.9"}
+  [inst]
+  (inst-ms* inst))
 
 (defn inst-in-range?
   "Return true if inst at or after start and before end"
