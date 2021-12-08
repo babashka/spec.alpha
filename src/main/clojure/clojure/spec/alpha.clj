@@ -1954,10 +1954,12 @@ system property. Defaults to true."}
   *compile-asserts*
   (not= "false" (System/getProperty "clojure.spec.compile-asserts")))
 
+(c/def ^:private check-spec-asserts (atom true))
+
 (defn check-asserts?
   "Returns the value set by check-asserts."
   []
-  #_clojure.lang.RT/checkSpecAsserts)
+  @check-spec-asserts)
 
 (defn check-asserts
   "Enable or disable spec asserts that have been compiled
@@ -1966,7 +1968,7 @@ with '*compile-asserts*' true.  See 'assert'.
 Initially set to boolean value of clojure.spec.check-asserts
 system property. Defaults to false."
   [flag]
-  #_(set! (. clojure.lang.RT checkSpecAsserts) flag))
+  (reset! check-spec-asserts flag))
 
 (defn assert*
   "Do not call this directly, use 'assert'."
@@ -1995,7 +1997,7 @@ value of 'clojure.spec.check-asserts' system property, or false if not
 set. You can toggle check-asserts? with (check-asserts bool)."
   [spec x]
   (if *compile-asserts*
-    `(if clojure.lang.RT/checkSpecAsserts
+    `(if @check-spec-asserts
        (assert* ~spec ~x)
        ~x)
     x))
