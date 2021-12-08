@@ -104,14 +104,6 @@ For non-Clojure fns, :scope and :local-fn will be absent."
              {:local-fn (symbol (degensym local))
               :thunk? (thunk-frame? local)}))))
 
-;; TODO: add in bb
-(defn StackTraceElement->vec
-  "Constructs a data representation for a StackTraceElement: [class method file line]"
-  {:added "1.9"}
-  [^StackTraceElement o]
-  [(symbol (.getClassName o)) (symbol (.getMethodName o)) (.getFileName o) (.getLineNumber o)])
-
-
 (defn- stacktrace-relevant-to-instrument
   "Takes a coll of stack trace elements (as returned by
 StackTraceElement->vec) and returns a coll of maps as per
