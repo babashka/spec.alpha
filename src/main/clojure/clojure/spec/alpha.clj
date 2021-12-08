@@ -323,9 +323,10 @@
 (defn- res [form]
   (cond
    (keyword? form) form
-   (symbol? form) (if (= 'fn form) ;; TODO: add fn macro in SCI
-                    'clojure.core/fn
-                    (c/or (-> form resolve ->sym) form))   
+   (symbol? form) (cond
+                    (= 'fn form) 'clojure.core/fn ;; TODO: add fn macro in SCI
+                    (= 'not form) 'clojure.core/not ;; TODO add not macro in SCI, we can keep the intrinsic
+                    :else (c/or (-> form resolve ->sym) form))
    (sequential? form) (walk/postwalk #(if (symbol? %) (res %) %) (unfn form))
    :else form))
 
@@ -385,7 +386,8 @@
   Returns a spec."
   [form & {:keys [gen]}]
   (when form
-    `(spec-impl '~(res form) ~form ~gen nil)))
+    (let [v (res form)]
+      `(spec-impl ~(list 'quote v) ~form ~gen nil))))
 
 (defmacro multi-spec
   "Takes the name of a spec/predicate-returning multimethod and a
@@ -1908,7 +1910,7 @@
   "Return true if inst at or after start and before end"
   [start end inst]
   (c/and (inst? inst)
-         #_(let [t nil #_(inst-ms inst)]
+         (let [t (inst-ms inst)]
            (c/and (<= (inst-ms start) t) (< t (inst-ms end))))))
 
 (defmacro inst-in
