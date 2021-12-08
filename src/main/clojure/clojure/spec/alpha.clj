@@ -1893,19 +1893,6 @@
            [args (apply f args)])
          (throw (Exception. "No :args spec found, can't generate"))))))
 
-(defprotocol Inst
-  (inst-ms* [inst]))
-
-(extend-protocol Inst
-  java.util.Date
-  (inst-ms* [inst] (.getTime ^java.util.Date inst)))
-
-(defn inst-ms
-  "Return the number of milliseconds since January 1, 1970, 00:00:00 GMT"
-  {:added "1.9"}
-  [inst]
-  (inst-ms* inst))
-
 (defn inst-in-range?
   "Return true if inst at or after start and before end"
   [start end inst]
