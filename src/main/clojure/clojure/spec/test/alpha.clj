@@ -158,8 +158,8 @@ failure in instrument."
        (with-instrument-disabled
          (when (:args fn-spec) (conform! fn-name :args (:args fn-spec) args args))
          (binding [*instrument-enabled* true]
-           (.applyTo ^clojure.lang.IFn f args)))
-       (.applyTo ^clojure.lang.IFn f args)))))
+           (apply f args)))
+       (apply f args)))))
 
 (defn- no-fspec
   [v spec]
