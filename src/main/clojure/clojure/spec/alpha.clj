@@ -386,8 +386,7 @@
   Returns a spec."
   [form & {:keys [gen]}]
   (when form
-    (let [v (res form)]
-      `(spec-impl ~(list 'quote v) ~form ~gen nil))))
+    `(spec-impl '~(res form) ~form ~gen nil)))
 
 (defmacro multi-spec
   "Takes the name of a spec/predicate-returning multimethod and a
