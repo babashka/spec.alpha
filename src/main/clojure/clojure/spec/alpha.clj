@@ -1953,7 +1953,7 @@ system property. Defaults to true."}
   *compile-asserts*
   (not= "false" (System/getProperty "clojure.spec.compile-asserts")))
 
-(c/def ^:private check-spec-asserts (atom true))
+(def ^:private check-spec-asserts (atom true))
 
 (defn check-asserts?
   "Returns the value set by check-asserts."
