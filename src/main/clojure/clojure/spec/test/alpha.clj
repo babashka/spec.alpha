@@ -89,7 +89,7 @@ guessing the original Clojure names. Returns a map with
 For non-Clojure fns, :scope and :local-fn will be absent."
   [[cls method file line]]
   (let [clojure? (contains? '#{invoke invokeStatic} method)
-        demunge #(clojure.main/demunge %)
+        demunge #(s/demunge %)
         degensym #(str/replace % #"--.*" "")
         [ns-sym name-sym local] (when clojure?
                                   (->> (str/split (str cls) #"\$" 3)
@@ -150,8 +150,8 @@ failure in instrument."
        (with-instrument-disabled
          (when (:args fn-spec) (conform! fn-name :args (:args fn-spec) args args))
          (binding [*instrument-enabled* true]
-           (apply f args)))
-       (apply f args)))))
+           (.applyTo ^clojure.lang.IFn f args)))
+       (.applyTo ^clojure.lang.IFn f args)))))
 
 (defn- no-fspec
   [v spec]

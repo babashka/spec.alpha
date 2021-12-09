@@ -21,6 +21,12 @@
 
 (alias 'c 'clojure.core)
 
+;; added because I didn't want to expose clojure.lang.Compiler in bb
+;; see https://ask.clojure.org/index.php/11371/consider-adding-demunge-into-clojure-core
+(require 'clojure.main)
+(defn demunge [s]
+  (clojure.main/demunge s))
+
 (set! *warn-on-reflection* true)
 
 (def ^:dynamic *recursion-limit*
@@ -132,7 +138,7 @@
   (let [[_ f-ns f-n] (re-matches #"(.*)\$(.*?)(__[0-9]+)?" (.. f getClass getName))]
     ;; check for anonymous function
     (when (not= "fn" f-n)
-      (symbol (clojure.main/demunge f-ns) (clojure.main/demunge f-n)))))
+      (symbol (demunge f-ns) (demunge f-n)))))
 
 (extend-protocol Specize
   clojure.lang.Keyword
