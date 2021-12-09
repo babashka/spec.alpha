@@ -955,10 +955,10 @@
   ([form mmvar retag] (multi-spec-impl form mmvar retag nil))
   ([form mmvar retag gfn]
      (let [id (java.util.UUID/randomUUID)
-           predx #(let [mm @mmvar]
-                    (c/and (.getMethod mm ((.dispatchFn mm) %))
+           predx #(let [^clojure.lang.MultiFn mm @mmvar]
+                    (c/and (.getMethod mm ((.-dispatchFn mm) %))
                            (mm %)))
-           dval #((.dispatchFn @mmvar) %)
+           dval #((.-dispatchFn ^clojure.lang.MultiFn @mmvar) %)
            tag (if (keyword? retag)
                  #(assoc %1 retag %2)
                  retag)]
