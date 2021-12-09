@@ -1,6 +1,30 @@
 spec.alpha
 ========================================
 
+## Babashka maintained fork
+
+This fork of `spec.alpha` works in babashka. To make it compatible, the
+following changes with the original spec.alpha were introduced:
+
+- Calls to `clojure.Compiler/demunge` are replaced with a function in
+  `spec.alpha` called `demunge` which defers to `clojure.main/demunge`. This was
+  done to note have to expose `clojure.lang.Compiler` in babashka. Vote
+  [here](https://ask.clojure.org/index.php/11371/consider-adding-demunge-into-clojure-core)
+  to get `demunge` into clojure.core.
+- Interop on vars to turn them into symbols is replaced by
+  looking up the var name and namespace via metadata.
+- `((.dispatchFn mm)` was rewritten to `((.-dispatchFn mm)` to make the field
+  invocation explicit, which is the only way SCI currently understands field
+  interop.
+- `clojure.lang.RT/checkSpecAsserts` is replaced by an internal atom since babashka doesn't have `clojure.lang.RT`
+
+
+Run `bb test` to run tests.
+
+Here follows the original README.
+
+<hr>
+
 spec is a Clojure library to describe the structure of data and functions. Specs can be used to validate data, conform (destructure) data, explain invalid data, generate examples that conform to the specs, and automatically use generative testing to test functions.
 
 Clojure 1.9 depends on this library and provides it to users of Clojure. Thus, the recommended way to use this library is to add a dependency on the latest version of Clojure 1.9, rather than including it directly. In some cases, this library may release more frequently than Clojure. In those cases, you can explictly include the latest version of this library with the dependency info below.
