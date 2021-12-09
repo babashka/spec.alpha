@@ -70,8 +70,7 @@
       drange 3.0 ::s/invalid [{:pred '(clojure.core/fn [%] (clojure.core/<= 3.1 %)), :val 3.0}]
       drange 3.1 3.1 nil
       drange 3.2 3.2 nil
-      ;; TODO: drange Double/POSITIVE_INFINITY ::s/invalid [{:pred '(clojure.core/fn [%] (clojure.core/not (Double/isInfinite %))), :val Double/POSITIVE_INFINITY}]
-      ;; See https://github.com/babashka/sci/issues/647
+      drange Double/POSITIVE_INFINITY ::s/invalid [{:pred '(clojure.core/fn [%] (clojure.core/not (Double/isInfinite %))), :val Double/POSITIVE_INFINITY}]
       ;; can't use equality-based test for Double/NaN
       ;; drange Double/NaN ::s/invalid {[] {:pred '(clojure.core/fn [%] (clojure.core/not (Double/isNaN %))), :val Double/NaN}}
 
