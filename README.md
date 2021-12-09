@@ -3,8 +3,15 @@ spec.alpha
 
 ## Babashka maintained fork
 
-This fork of `spec.alpha` works in babashka. To make it compatible, the
-following changes with the original spec.alpha were introduced:
+This fork of `spec.alpha` works in babashka. You can use in babashka by using these coordinates:
+
+```
+org.babashka/spec.alpha {:git/url "https://github.com/babashka/spec.alpha"
+                         :sha "<latest-sha>"}
+```
+
+To make it compatible, the following changes with the original spec.alpha were
+introduced:
 
 - Calls to `clojure.Compiler/demunge` are replaced with a function in
   `spec.alpha` called `demunge` which defers to `clojure.main/demunge`. This was
