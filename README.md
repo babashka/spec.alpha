@@ -3,12 +3,72 @@ spec.alpha
 
 ## Babashka maintained fork
 
-This fork of `spec.alpha` works in babashka. You can use in babashka by using these coordinates:
+This fork of `spec.alpha` works in babashka.
+
+### Usages
+
+You can use in babashka by using these coordinates:
 
 ```
 org.babashka/spec.alpha {:git/url "https://github.com/babashka/spec.alpha"
                          :sha "<latest-sha>"}
 ```
+
+### Core specs
+
+If you need to use the `clojure.core.specs.alpha` namespace, then explicitly add
+this to your dependencies, as babashka ignores this dependency by default,
+unless you explicitly add it. Example `bb.edn`:
+
+
+``` clojure
+{:deps {org.babashka/spec.alpha {:git/url "https://github.com/babashka/spec.alpha"
+                                 :git/sha "644a7fc216e43d5da87b07471b0f87d874107d1a"}
+        org.clojure/core.specs.alpha {:mvn/version "0.2.62"}}}
+```
+
+Then you can use the core specs like this:
+
+```
+(ns spec-example
+  (:require [clojure.core.specs.alpha :as csa]
+            [clojure.spec.alpha :as s]))
+
+(prn (s/conform ::csa/defn-args '[foo [x y z] (x y z)]))
+;; => {:fn-name foo,
+      :fn-tail [:arity-1 {:params {:params [[:local-symbol x] [:local-symbol y] [:local-symbol z]]},
+                          :body [:body [(x y z)]]}]}
+```
+
+You need to do this even when libraries declare an explicit dependency on core
+specs, since babashka assumes by default that you will not use them, as they are
+a dependency of clojure. An example of such a library is
+[better-cond](https://github.com/Engelberg/better-cond):
+
+``` clojure
+{:deps {org.babashka/spec.alpha {:git/url "https://github.com/babashka/spec.alpha"
+                                 :git/sha "644a7fc216e43d5da87b07471b0f87d874107d1a"}
+        org.clojure/core.specs.alpha {:mvn/version "0.2.62"}
+        better-cond/better-cond {:mvn/version "2.1.1"}}}
+```
+
+``` clojure
+(ns better-cond-example
+  (:require [better-cond.core :as b]))
+
+(b/defnc f [a]
+  (odd? a) 1
+  let [a (quot a 2)
+       _ (prn a)]
+  when-let [x (> a 25)]
+  x)
+
+(prn (f 100))
+;; 50
+;; true
+```
+
+### Implementation notes
 
 To make it compatible, the following changes with the original spec.alpha were
 introduced:
