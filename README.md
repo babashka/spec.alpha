@@ -5,7 +5,9 @@ spec.alpha
 
 This fork of `spec.alpha` works in babashka. It is intended to be a feature
 complete solution for using spec with babashka and replaces
-[spartan.spec](https://github.com/borkdude/spartan.spec).
+[spartan.spec](https://github.com/borkdude/spartan.spec). See this [blog
+post](https://blog.michielborkent.nl/using-clojure-spec-alpha-with-babashka.html)
+for more background information.
 
 ### Usage
 
