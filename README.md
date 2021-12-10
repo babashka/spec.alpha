@@ -3,9 +3,11 @@ spec.alpha
 
 ## Babashka maintained fork
 
-This fork of `spec.alpha` works in babashka.
+This fork of `spec.alpha` works in babashka. It is intended to be a feature
+complete solution for using spec with babashka and replaces
+[spartan.spec](https://github.com/borkdude/spartan.spec).
 
-### Usages
+### Usage
 
 You can use in babashka by using these coordinates:
 
