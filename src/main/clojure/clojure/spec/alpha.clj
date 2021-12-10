@@ -23,9 +23,18 @@
 
 ;; added because I didn't want to expose clojure.lang.Compiler in bb
 ;; see https://ask.clojure.org/index.php/11371/consider-adding-demunge-into-clojure-core
-(require 'clojure.main)
+(defmacro if-bb [then & [else]]
+  (if (System/getProperty "babashka.version")
+    then
+    else))
+
+(if-bb
+    (require 'clojure.main))
+
 (defn demunge [s]
-  (clojure.main/demunge s))
+  #_:clj-kondo/ignore
+  (if-bb (clojure.main/demunge s)
+    (clojure.lang.Compiler/demunge s)))
 
 (set! *warn-on-reflection* true)
 
