@@ -15,8 +15,10 @@ You can use in babashka by using these coordinates:
 
 ```
 org.babashka/spec.alpha {:git/url "https://github.com/babashka/spec.alpha"
-                         :sha "<latest-sha>"}
+                         :git/sha "1a841c4cc1d4f6dab7505a98ed2d532dd9d56b78"}
 ```
+
+or any later SHA.
 
 ### Core specs
 
