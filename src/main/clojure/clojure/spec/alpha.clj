@@ -146,7 +146,8 @@
 (defn- fn-sym [^Object f]
   (let [[_ f-ns f-n] (re-matches #"(.*)\$(.*?)(__[0-9]+)?" (.. f getClass getName))]
     ;; check for anonymous function
-    (when (not= "fn" f-n)
+    (when (c/and (not= "fn" f-n)
+                 (not= "sci.impl.fns$fun" f-ns))
       (symbol (demunge f-ns) (demunge f-n)))))
 
 (extend-protocol Specize
