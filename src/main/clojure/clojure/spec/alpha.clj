@@ -322,10 +322,7 @@
   "Returns a symbol from a symbol or var"
   [x]
   (if (var? x)
-    (let [m (meta x)
-          n (:name m)
-          ns (:ns m)]
-      (symbol (str ns) (str n)))
+    (symbol x)
     x))
 
 (defn- unfn [expr]
